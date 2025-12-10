@@ -1,0 +1,47 @@
+private void btnGuardar_Click(object sender, EventArgs e)
+{
+    using (SqlConnection conn = db.GetConnection())
+    {
+        conn.Open();
+
+        SqlTransaction trx = conn.BeginTransaction();
+
+        try
+        {
+            // distributors
+            SqlCommand cmd1 = new SqlCommand(
+                "INSERT INTO distributors (distributor_id) VALUES (@id)",
+                conn, trx);
+            cmd1.Parameters.AddWithValue("@id", txtId.Text);
+            cmd1.ExecuteNonQuery();
+
+            // persons
+            SqlCommand cmd2 = new SqlCommand(
+                "INSERT INTO persons VALUES (@id, @name, @pat, @mat)",
+                conn, trx);
+            cmd2.Parameters.AddWithValue("@id", txtId.Text);
+            cmd2.Parameters.AddWithValue("@name", txtNombre.Text);
+            cmd2.Parameters.AddWithValue("@pat", txtPaterno.Text);
+            cmd2.Parameters.AddWithValue("@mat", txtMaterno.Text);
+            cmd2.ExecuteNonQuery();
+
+            // addresses
+            SqlCommand cmd3 = new SqlCommand(
+                "INSERT INTO addresses VALUES (@id, @street, @num, @col)",
+                conn, trx);
+            cmd3.Parameters.AddWithValue("@id", txtId.Text);
+            cmd3.Parameters.AddWithValue("@street", txtCalle.Text);
+            cmd3.Parameters.AddWithValue("@num", txtNumero.Text);
+            cmd3.Parameters.AddWithValue("@col", txtColonia.Text);
+            cmd3.ExecuteNonQuery();
+
+            trx.Commit();
+            MessageBox.Show("Distribuidor guardado correctamente ✅");
+        }
+        catch
+        {
+            trx.Rollback();
+            MessageBox.Show("Error al guardar ❌");
+        }
+    }
+}
