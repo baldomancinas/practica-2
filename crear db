@@ -1,0 +1,37 @@
+// Crear Base de Datos
+CREATE DATABASE DistributorDB;
+GO
+USE DistributorDB;
+GO
+
+// Crear Tabla: distributors
+CREATE TABLE distributors (
+    distributor_id VARCHAR(20) NOT NULL PRIMARY KEY,
+    registration_date DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+// Crear Tabla: persons
+CREATE TABLE persons (
+    person_id INT IDENTITY(1,1) PRIMARY KEY,
+    distributor_id VARCHAR(20) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name_paterno VARCHAR(100) NOT NULL,
+    last_name_materno VARCHAR(100),
+    CONSTRAINT FK_person_distributor
+        FOREIGN KEY (distributor_id)
+        REFERENCES distributors(distributor_id)
+        ON DELETE CASCADE
+);
+
+// Crear Tabla: addresses
+CREATE TABLE addresses (
+    address_id INT IDENTITY(1,1) PRIMARY KEY,
+    distributor_id VARCHAR(20) NOT NULL,
+    street VARCHAR(150) NOT NULL,
+    house_number VARCHAR(10) NOT NULL,
+    neighborhood VARCHAR(100) NOT NULL,
+    CONSTRAINT FK_address_distributor
+        FOREIGN KEY (distributor_id)
+        REFERENCES distributors(distributor_id)
+        ON DELETE CASCADE
+);
