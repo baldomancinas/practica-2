@@ -1,0 +1,18 @@
+CREATE PROCEDURE sp_GetDistributorById
+    @distributor_id VARCHAR(20)
+AS
+BEGIN
+    SELECT
+        CONCAT(
+            p.first_name, ' ',
+            p.last_name_paterno, ' ',
+            p.last_name_materno
+        ) AS nombre_completo,
+        a.street AS calle,
+        a.house_number AS numero_casa,
+        a.neighborhood AS colonia
+    FROM distributors d
+    INNER JOIN persons p ON d.distributor_id = p.distributor_id
+    INNER JOIN addresses a ON d.distributor_id = a.distributor_id
+    WHERE d.distributor_id = @distributor_id;
+END;
