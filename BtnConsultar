@@ -1,0 +1,29 @@
+private void btnConsultar_Click(object sender, EventArgs e)
+{
+    string id = Microsoft.VisualBasic.Interaction.InputBox(
+        "Ingrese ID del distribuidor", "Consulta");
+
+    using (SqlConnection conn = db.GetConnection())
+    {
+        SqlCommand cmd = new SqlCommand("sp_GetDistributorById", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.AddWithValue("@distributor_id", id);
+
+        conn.Open();
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            MessageBox.Show(
+                $"Nombre: {reader["nombre_completo"]}\n" +
+                $"Calle: {reader["calle"]}\n" +
+                $"Número: {reader["numero_casa"]}\n" +
+                $"Colonia: {reader["colonia"]}"
+            );
+        }
+        else
+        {
+            MessageBox.Show("Distribuidor no encontrado");
+        }
+    }
+}
